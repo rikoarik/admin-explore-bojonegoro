@@ -18,7 +18,7 @@ const auth = getAuth(app);
 function handleLogout() {
     signOut(auth)
         .then(() => {
-            window.location.href = "/index.html";
+            window.location.href = "/public/index.html";
         })
         .catch((error) => {
             console.error("Error during logout:", error);
