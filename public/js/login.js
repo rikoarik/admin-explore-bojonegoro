@@ -23,7 +23,7 @@ function validateLogin() {
     signInWithEmailAndPassword(auth, email, password)
         .then(() => {
             errorMessageElement.innerHTML = "";
-            window.location.href = "https://rikoarik.github.io/public/dashboard/Dashboard.html";
+            window.location.href = "*/public/dashboard/Dashboard.html";
         })
         .catch((error) => {
             errorMessageElement.innerHTML = "Invalid username or password. Please try again.";
