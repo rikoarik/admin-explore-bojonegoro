@@ -16,17 +16,15 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const database = getDatabase(app);
 
-class WisataItem {
-  constructor({ no, wisata, alamat, latitude, longitude, imageUrl, kategori, deskripsi, tipsSaran, lainLain, fasilitas }) {
+class HotelItem {
+  constructor({ no, Hotel, alamat, latitude, longitude, imageUrl, kategori, deskripsi, lainLain, fasilitas }) {
     this.no = no;
-    this.wisata = wisata;
+    this.Hotel = Hotel;
     this.alamat = alamat;
     this.latitude = latitude;
     this.longitude = longitude;
     this.imageUrl = imageUrl;
-    this.kategori = kategori;
     this.deskripsi = deskripsi;
-    this.tipsSaran = tipsSaran;
     this.lainLain = lainLain;
     this.fasilitas = fasilitas;
   }
@@ -40,12 +38,12 @@ class AppController {
 
   displayData() {
     const dataTableBody = document.getElementById('data-table-body');
-    onValue(ref(database, 'objekwisata/'), (snapshot) => {
+    onValue(ref(database, 'Hotel/'), (snapshot) => {
       const data = snapshot.val();
       dataTableBody.innerHTML = '';
       for (const key in data) {
         if (data.hasOwnProperty(key)) {
-          const item = new WisataItem(data[key]);
+          const item = new HotelItem(data[key]);
           const row = this.renderRow(item, key);
           dataTableBody.appendChild(row);
         }
@@ -57,15 +55,13 @@ class AppController {
     const row = document.createElement('tr');
     row.innerHTML = `
       <td>${item.no}</td>
-      <td>${item.wisata}</td>
+      <td>${item.Hotel}</td>
       <td>${item.alamat}</td>
       <td>${item.latitude}</td>
       <td>${item.longitude}</td>
       <td>${item.imageUrl}</td>
-      <td>${item.kategori}</td>
       <td>${item.fasilitas.join(', ')}</td>
       <td>${item.deskripsi}</td>
-      <td>${item.tipsSaran}</td>
       <td>${item.lainLain}</td>
       <td class="text-center">
         <button class="btn btn-warning btn-sm" data-action="edit" data-key="${key}")">Edit</button>
@@ -80,19 +76,17 @@ class AppController {
     this.selectedKey = key;
 
     // Populate the edit form with the selected item's data
-    const selectedItemRef = ref(database, `objekwisata/${key}`);
+    const selectedItemRef = ref(database, `Hotel/${key}`);
     onValue(selectedItemRef, (snapshot) => {
       const selectedItem = snapshot.val();
       document.getElementById('editNo').value = selectedItem.no;
-      document.getElementById('editWisata').value = selectedItem.wisata;
+      document.getElementById('editHotel').value = selectedItem.Hotel;
       document.getElementById('editAlamat').value = selectedItem.alamat;
       document.getElementById('editLatitude').value = selectedItem.latitude;
       document.getElementById('editLongitude').value = selectedItem.longitude;
       document.getElementById('editImageUrl').value = selectedItem.imageUrl;
-      document.getElementById('editKategori').value = selectedItem.kategori;
       document.getElementById('editFasilitas').value = selectedItem.fasilitas;
       document.getElementById('editDeskripsi').value = selectedItem.deskripsi;
-      document.getElementById('editTipsSaran').value = selectedItem.tipsSaran;
       document.getElementById('editLainLain').value = selectedItem.lainLain;
       const editFasilitasSelect = document.getElementById('editFasilitas');
       const selectedFacilities = selectedItem.fasilitas || []; // Ensure it is an array
@@ -114,7 +108,7 @@ class AppController {
     }
 
     // Remove the corresponding data from the database
-    const itemRef = ref(database, `objekwisata/${key}`);
+    const itemRef = ref(database, `Hotel/${key}`);
     set(itemRef, null)
       .then(() => {
         alert('Item deleted successfully');
@@ -135,19 +129,17 @@ class AppController {
   submitAddForm() {
     const formData = {
       no: document.getElementById('no').value,
-      wisata: document.getElementById('wisata').value,
+      Hotel: document.getElementById('Hotel').value,
       alamat: document.getElementById('alamat').value,
       latitude: document.getElementById('latitude').value,
       longitude: document.getElementById('longitude').value,
       imageUrl: document.getElementById('imageUrl').value,
-      kategori: document.getElementById('kategori').value,
       fasilitas: Array.from(document.getElementById('fasilitas').selectedOptions).map(option => option.value),
       deskripsi: document.getElementById('deskripsi').value,
-      tipsSaran: document.getElementById('tipsSaran').value,
       lainLain: document.getElementById('lainLain').value,
     };
   
-    const newPostRef = push(ref(database, 'objekwisata/'));
+    const newPostRef = push(ref(database, 'Hotel/'));
     set(newPostRef, formData).then(() => {
       $('#addModal').modal('hide');
       alert('Add data Success');
@@ -162,7 +154,7 @@ class AppController {
   submitEditForm() {
     const formData = this.getEditFormData();
 
-    set(ref(database, `objekwisata/${this.selectedKey}`), formData)
+    set(ref(database, `objekHotel/${this.selectedKey}`), formData)
       .then(() => {
         $('#editModal').modal('hide');
         alert('Updated successfully');
@@ -176,15 +168,13 @@ class AppController {
   getEditFormData() {
     return {
       no: document.getElementById('editNo').value,
-      wisata: document.getElementById('editWisata').value,
+      Hotel: document.getElementById('editHotel').value,
       alamat: document.getElementById('editAlamat').value,
       latitude: document.getElementById('editLatitude').value,
       longitude: document.getElementById('editLongitude').value,
       imageUrl: document.getElementById('editImageUrl').value,
-      kategori: document.getElementById('editKategori').value,
       fasilitas: Array.from(document.getElementById('editFasilitas').selectedOptions).map(option => option.value),
       deskripsi: document.getElementById('editDeskripsi').value,
-      tipsSaran: document.getElementById('editTipsSaran').value,
       lainLain: document.getElementById('editLainLain').value,
     };
   }
