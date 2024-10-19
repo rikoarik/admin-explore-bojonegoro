@@ -27,7 +27,7 @@
 
 - **HTML & JavaScript**: Teknologi utama untuk pengembangan frontend.
 - **Firebase**: Backend untuk autentikasi dan penyimpanan data.
-- **Bootstrap 5.0: Framework front-end untuk membangun desain web responsif dan modern
+- **Bootstrap 5.0**: Framework front-end untuk membangun desain web responsif dan modern
 
 ## Kontribusi
 
